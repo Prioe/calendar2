@@ -21,78 +21,74 @@ import de.malbertz.calendar.server.core.Server;
 
 public class GraphicalUI extends Application implements Initializable {
 
+   private Server server = null;
+   private TextUI handler = null;
 
-	private Server server = null;
-	private TextUI handler = null;
-	
-	@FXML
-	private TextArea consoleArea;
-	@FXML
-	private Button sendButton;
-	@FXML
-	private TextField commandTextField;
-	
+   @FXML
+   private TextArea consoleArea;
+   @FXML
+   private Button sendButton;
+   @FXML
+   private TextField commandTextField;
 
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {	
-		this.server = Context.getInstance().getServer();
-		this.handler = new TextUI(server);
-		Console console = new Console(consoleArea);
-		PrintStream ps = new PrintStream(console, true);
-        System.setOut(ps);
-        
-        sendButton.setOnAction(event -> {
-        	if(!handler.handle(commandTextField.getText())) {
-        		Platform.exit();
-        	}
-        	commandTextField.clear();
-        });
-	}
+   @Override
+   public void initialize(URL location, ResourceBundle resources) {
+      this.server = Context.getInstance().getServer();
+      this.handler = new TextUI(server);
+      Console console = new Console(consoleArea);
+      PrintStream ps = new PrintStream(console, true);
+      System.setOut(ps);
 
-	@Override
-	public void start(Stage primaryStage) throws Exception {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource(
-				"/ServerView.fxml"));
-		Parent root = loader.load();
-		Scene scene = new Scene(root);
-		primaryStage.setScene(scene);
-		primaryStage.setTitle("Calendar Server");
-		primaryStage.setMinWidth(400);
-		primaryStage.setMinHeight(300);		
-		primaryStage.show();
-	}
+      sendButton.setOnAction(event -> {
+         if (!handler.handle(commandTextField.getText())) {
+            Platform.exit();
+         }
+         commandTextField.clear();
+      });
+   }
 
-	private class Console extends OutputStream {
-		private TextArea output;
+   @Override
+   public void start(Stage primaryStage) throws Exception {
+      FXMLLoader loader = new FXMLLoader(getClass().getResource(
+            "/ServerView.fxml"));
+      Parent root = loader.load();
+      Scene scene = new Scene(root);
+      primaryStage.setScene(scene);
+      primaryStage.setTitle("Calendar Server");
+      primaryStage.setMinWidth(400);
+      primaryStage.setMinHeight(300);
+      primaryStage.show();
+   }
 
-		public Console(TextArea ta) {
-			this.output = ta;
-		}
+   private class Console extends OutputStream {
+      private TextArea output;
 
+      public Console(TextArea ta) {
+         this.output = ta;
+      }
 
-		@Override
-		public void write(int b) throws IOException {
-			output.appendText(String.valueOf((char) b));
-			
-		}
+      @Override
+      public void write(int b) throws IOException {
+         output.appendText(String.valueOf((char) b));
 
-	}
-	
+      }
 
-	public Server getServer() {
-		return server;
-	}
+   }
 
-	public void setServer(Server server) {
-		this.server = server;
-	}
+   public Server getServer() {
+      return server;
+   }
 
-	public TextUI getHandler() {
-		return handler;
-	}
+   public void setServer(Server server) {
+      this.server = server;
+   }
 
-	public void setHandler(TextUI handler) {
-		this.handler = handler;
-	}
+   public TextUI getHandler() {
+      return handler;
+   }
+
+   public void setHandler(TextUI handler) {
+      this.handler = handler;
+   }
 
 }

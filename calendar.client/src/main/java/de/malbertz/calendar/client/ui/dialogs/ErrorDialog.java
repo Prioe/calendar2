@@ -14,37 +14,37 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-public class ErrorDialog extends Stage implements Initializable{
+public class ErrorDialog extends Stage implements Initializable {
 
-	@FXML
-	private Label errorLabel;
-	@FXML
-	private Button okButton;
-	
-	public ErrorDialog(ResourceBundle bundle, String str) {
-		super(StageStyle.UTILITY);
-		initModality(Modality.WINDOW_MODAL);
-		setTitle(bundle.getString("error"));
-		setResizable(false);
+   @FXML
+   private Label errorLabel;
+   @FXML
+   private Button okButton;
 
-		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource(
-					"/fxml/ErrorDialog.fxml"));
-			loader.setResources(bundle);
-			loader.setController(this);
-			Parent dialog = loader.load();
-			dialog.getStylesheets().add("css/style.css");
-			Scene scene = new Scene(dialog);
-			setScene(scene);
-		} catch (Exception e) {
-			
-		}
-		errorLabel.setText(str);
-	}
-	
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		okButton.setOnAction(event -> hide());
-	}
+   public ErrorDialog(ResourceBundle bundle, String str) {
+      super(StageStyle.UTILITY);
+      initModality(Modality.WINDOW_MODAL);
+      setTitle(bundle.getString("error"));
+      setResizable(false);
+
+      try {
+         FXMLLoader loader = new FXMLLoader(getClass().getResource(
+               "/fxml/ErrorDialog.fxml"));
+         loader.setResources(bundle);
+         loader.setController(this);
+         Parent dialog = loader.load();
+         dialog.getStylesheets().add("css/style.css");
+         Scene scene = new Scene(dialog);
+         setScene(scene);
+      } catch (Exception e) {
+
+      }
+      errorLabel.setText(str);
+   }
+
+   @Override
+   public void initialize(URL location, ResourceBundle resources) {
+      okButton.setOnAction(event -> hide());
+   }
 
 }

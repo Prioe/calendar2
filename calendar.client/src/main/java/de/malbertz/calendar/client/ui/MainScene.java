@@ -46,166 +46,157 @@ import de.malbertz.calendar2.CalendarEntry;
  */
 public class MainScene implements Initializable, Observer {
 
-	private static final Logger log = LogManager.getLogger(MainScene.class);
+   private static final Logger log = LogManager.getLogger(MainScene.class);
 
-	@FXML
-	private Parent root;
-	@FXML
-	private HBox contentPane;
-	@FXML
-	private ToggleButton overviewToggleButton;
-	@FXML
-	private ToggleButton weekToggleButton;
-	@FXML
-	private ToggleButton monthToggleButton;
-	@FXML
-	private Button newButton;
-	@FXML
-	private Label appLabel;
+   @FXML
+   private Parent root;
+   @FXML
+   private HBox contentPane;
+   @FXML
+   private ToggleButton overviewToggleButton;
+   @FXML
+   private ToggleButton weekToggleButton;
+   @FXML
+   private ToggleButton monthToggleButton;
+   @FXML
+   private Button newButton;
+   @FXML
+   private Label appLabel;
 
-	private SimpleListProperty<CalendarEntry> entryList;
-	private ResourceBundle bundle;
+   private SimpleListProperty<CalendarEntry> entryList;
+   private ResourceBundle bundle;
 
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		this.bundle = resources;
-		entryList = new SimpleListProperty<CalendarEntry>(
-				FXCollections.observableArrayList());
-		Context.getInstance().getClient().addObserver(this);
+   @Override
+   public void initialize(URL location, ResourceBundle resources) {
+      this.bundle = resources;
+      entryList = new SimpleListProperty<CalendarEntry>(
+            FXCollections.observableArrayList());
+      Context.getInstance().getClient().addObserver(this);
 
-		initModeToggleGroup();
-		newButton.setOnAction(event -> {
-			CreateDialog dialog = new CreateDialog(bundle);
-			if (dialog.getOwner() == null) {
-				dialog.initOwner(root.getScene().getWindow());
-			}
-			CalendarEntry newEntry = dialog.waitForEntry();
-			if (newEntry != null) {
-				entryList.add(newEntry);
-			}
-		});
-		newButton.setTooltip(new Tooltip(bundle.getString("createButtonTT")));
-		entryList.addAll(Context.getInstance().getClient().getList());
-		appLabel.setText(Context.getInstance().getClient().getUserName());
-	}
+      initModeToggleGroup();
+      newButton.setOnAction(event -> {
+         CreateDialog dialog = new CreateDialog(bundle);
+         if (dialog.getOwner() == null) {
+            dialog.initOwner(root.getScene().getWindow());
+         }
+         CalendarEntry newEntry = dialog.waitForEntry();
+         if (newEntry != null) {
+            entryList.add(newEntry);
+         }
+      });
+      newButton.setTooltip(new Tooltip(bundle.getString("createButtonTT")));
+      entryList.addAll(Context.getInstance().getClient().getList());
+      appLabel.setText(Context.getInstance().getClient().getUserName());
+   }
 
-	@SuppressWarnings("unchecked")
-	private void initModeToggleGroup() {
-		log.entry();
+   @SuppressWarnings("unchecked")
+   private void initModeToggleGroup() {
+      log.entry();
 
-		PersistentToggleGroup group = new PersistentToggleGroup();
-		overviewToggleButton.setToggleGroup(group);
-		weekToggleButton.setToggleGroup(group);
-		monthToggleButton.setToggleGroup(group);
-		overviewToggleButton.setTooltip(new Tooltip(bundle
-				.getString("agendaViewTT")));
-		weekToggleButton
-				.setTooltip(new Tooltip(bundle.getString("weekViewTT")));
-		monthToggleButton.setTooltip(new Tooltip(bundle
-				.getString("monthViewTT")));
+      PersistentToggleGroup group = new PersistentToggleGroup();
+      overviewToggleButton.setToggleGroup(group);
+      weekToggleButton.setToggleGroup(group);
+      monthToggleButton.setToggleGroup(group);
+      overviewToggleButton.setTooltip(new Tooltip(bundle
+            .getString("agendaViewTT")));
+      weekToggleButton.setTooltip(new Tooltip(bundle.getString("weekViewTT")));
+      monthToggleButton
+            .setTooltip(new Tooltip(bundle.getString("monthViewTT")));
 
-		group.selectedToggleProperty()
-				.addListener(
-						(ChangeListener<Toggle>) (observable, oldValue,
-								newValue) -> {
-							ToggleButton chk = (ToggleButton) newValue
-									.getToggleGroup().getSelectedToggle();
-							try {
-								if (chk.equals(overviewToggleButton)) {
+      group.selectedToggleProperty()
+            .addListener(
+                  (ChangeListener<Toggle>) (observable, oldValue, newValue) -> {
+                     ToggleButton chk = (ToggleButton) newValue
+                           .getToggleGroup().getSelectedToggle();
+                     try {
+                        if (chk.equals(overviewToggleButton)) {
 
-									CalendarEntry entry;
-									try {
-										entry = ((ContentPane<CalendarEntry>) contentPane
-												.getChildren().get(0))
-												.getSelectedItem();
-									} catch (IndexOutOfBoundsException e) {
-										entry = null;
-									}
-									contentPane.getChildren().clear();
-									AgendaView content = new AgendaView(bundle,
-											entry);
-									content.entryListProperty()
-											.bindBidirectional(entryList);
-									HBox.setHgrow(content, Priority.ALWAYS);
-									contentPane.getChildren().add(content);
-								} else if (chk.equals(weekToggleButton)) {
-									CalendarEntry entry = ((ContentPane<CalendarEntry>) contentPane
-											.getChildren().get(0))
-											.getSelectedItem();
-									contentPane.getChildren().clear();
-									WeekView content = new WeekView(bundle,
-											entry);
-									content.entryListProperty()
-											.bindBidirectional(entryList);
-									HBox.setHgrow(content, Priority.ALWAYS);
-									contentPane.getChildren().add(content);
-								} else if (chk.equals(monthToggleButton)) {
-									CalendarEntry entry = ((ContentPane<CalendarEntry>) contentPane
-											.getChildren().get(0))
-											.getSelectedItem();
-									contentPane.getChildren().clear();
-									MonthView content = new MonthView(bundle,
-											entry);
-									content.entryListProperty()
-											.bindBidirectional(entryList);
-									HBox.setHgrow(content, Priority.ALWAYS);
-									contentPane.getChildren().add(content);
-								}
-							} catch (Exception e) {
-								log.error(
-										"Failed to load a resource to the content pane. "
-												+ chk, e);
-							}
-						});
-		overviewToggleButton.setSelected(true);
-	}
+                           CalendarEntry entry;
+                           try {
+                              entry = ((ContentPane<CalendarEntry>) contentPane
+                                    .getChildren().get(0)).getSelectedItem();
+                           } catch (IndexOutOfBoundsException e) {
+                              entry = null;
+                           }
+                           contentPane.getChildren().clear();
+                           AgendaView content = new AgendaView(bundle, entry);
+                           content.entryListProperty().bindBidirectional(
+                                 entryList);
+                           HBox.setHgrow(content, Priority.ALWAYS);
+                           contentPane.getChildren().add(content);
+                        } else if (chk.equals(weekToggleButton)) {
+                           CalendarEntry entry = ((ContentPane<CalendarEntry>) contentPane
+                                 .getChildren().get(0)).getSelectedItem();
+                           contentPane.getChildren().clear();
+                           WeekView content = new WeekView(bundle, entry);
+                           content.entryListProperty().bindBidirectional(
+                                 entryList);
+                           HBox.setHgrow(content, Priority.ALWAYS);
+                           contentPane.getChildren().add(content);
+                        } else if (chk.equals(monthToggleButton)) {
+                           CalendarEntry entry = ((ContentPane<CalendarEntry>) contentPane
+                                 .getChildren().get(0)).getSelectedItem();
+                           contentPane.getChildren().clear();
+                           MonthView content = new MonthView(bundle, entry);
+                           content.entryListProperty().bindBidirectional(
+                                 entryList);
+                           HBox.setHgrow(content, Priority.ALWAYS);
+                           contentPane.getChildren().add(content);
+                        }
+                     } catch (Exception e) {
+                        log.error(
+                              "Failed to load a resource to the content pane. "
+                                    + chk, e);
+                     }
+                  });
+      overviewToggleButton.setSelected(true);
+   }
 
-	private class PersistentToggleGroup extends ToggleGroup {
-		public PersistentToggleGroup() {
-			super();
-			getToggles().addListener(new ListChangeListener<Toggle>() {
-				@Override
-				public void onChanged(Change<? extends Toggle> c) {
-					while (c.next())
-						for (final Toggle addedToggle : c.getAddedSubList())
-							((ToggleButton) addedToggle).addEventFilter(
-									MouseEvent.MOUSE_RELEASED,
-									new EventHandler<MouseEvent>() {
-										@Override
-										public void handle(MouseEvent mouseEvent) {
-											if (addedToggle
-													.equals(getSelectedToggle()))
-												mouseEvent.consume();
-										}
-									});
-				}
-			});
-		}
-	}
+   private class PersistentToggleGroup extends ToggleGroup {
+      public PersistentToggleGroup() {
+         super();
+         getToggles().addListener(new ListChangeListener<Toggle>() {
+            @Override
+            public void onChanged(Change<? extends Toggle> c) {
+               while (c.next())
+                  for (final Toggle addedToggle : c.getAddedSubList())
+                     ((ToggleButton) addedToggle).addEventFilter(
+                           MouseEvent.MOUSE_RELEASED,
+                           new EventHandler<MouseEvent>() {
+                              @Override
+                              public void handle(MouseEvent mouseEvent) {
+                                 if (addedToggle.equals(getSelectedToggle()))
+                                    mouseEvent.consume();
+                              }
+                           });
+            }
+         });
+      }
+   }
 
-	public SimpleListProperty<CalendarEntry> getEntryList() {
-		return entryList;
-	}
+   public SimpleListProperty<CalendarEntry> getEntryList() {
+      return entryList;
+   }
 
-	@Override
-	public void update(Observable o, Object arg) {
-		Platform.runLater(new Runnable() {
+   @Override
+   public void update(Observable o, Object arg) {
+      Platform.runLater(new Runnable() {
 
-			@Override
-			public void run() {
-				if (root.getScene().getWindow().isShowing()) {
-					ErrorDialog error = new ErrorDialog(bundle,
-							arg instanceof String ? (String) arg : bundle
-									.getString("connectionLost"));
-					if (error.getOwner() == null) {
-						error.initOwner(root.getScene().getWindow());
-					}
-					error.showAndWait();
-				}
-				Platform.exit();
-			}
-		});
+         @Override
+         public void run() {
+            if (root.getScene().getWindow().isShowing()) {
+               ErrorDialog error = new ErrorDialog(bundle,
+                     arg instanceof String ? (String) arg : bundle
+                           .getString("connectionLost"));
+               if (error.getOwner() == null) {
+                  error.initOwner(root.getScene().getWindow());
+               }
+               error.showAndWait();
+            }
+            Platform.exit();
+         }
+      });
 
-	}
+   }
 
 }

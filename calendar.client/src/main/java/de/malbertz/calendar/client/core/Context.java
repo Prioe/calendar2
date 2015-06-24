@@ -8,36 +8,36 @@ package de.malbertz.calendar.client.core;
  *
  */
 public class Context {
-	private final static Context instance = new Context();
+   private final static Context instance = new Context();
 
-	/**
-	 * Get the current instance.
-	 * 
-	 * @return the instance
-	 */
-	public static Context getInstance() {
-		return instance;
-	}
+   /**
+    * Get the current instance.
+    * 
+    * @return the instance
+    */
+   public static Context getInstance() {
+      return instance;
+   }
 
-	/** The client thats referenced to */
-	private Client client = new Client();
+   /** The client thats referenced to */
+   private Client client = new Client();
 
-	/**
-	 * Get the client thats referenced to.
-	 * 
-	 * @return the client
-	 */
-	public Client getClient() {
-		return client;
-	}
+   /**
+    * Get the client thats referenced to.
+    * 
+    * @return the client
+    */
+   public Client getClient() {
+      return client;
+   }
 
-	/**
-	 * Set the client to reference to.
-	 * 
-	 * @param client
-	 *            the client to reference to
-	 */
-	public void setClient(Client client) {
-		this.client = client;
-	}
+   /**
+    * Set the client to reference to.
+    * 
+    * @param client
+    *           the client to reference to
+    */
+   public void setClient(Client client) {
+      this.client = client;
+   }
 }

@@ -27,60 +27,60 @@ import de.malbertz.calendar.client.ui.dialogs.LoginDialog;
  */
 public class Main extends Application {
 
-	private static final Logger log = LogManager.getLogger(Main.class);
-	/** Client object the application is running on. */
-	private Client client;
+   private static final Logger log = LogManager.getLogger(Main.class);
+   /** Client object the application is running on. */
+   private Client client;
 
-	@Override
-	public void start(Stage primaryStage) throws Exception {
-		log.entry(primaryStage);
+   @Override
+   public void start(Stage primaryStage) throws Exception {
+      log.entry(primaryStage);
 
-		ResourceBundle bundle = ResourceBundle.getBundle("bundles.UIBundle",
-				new Locale("en"));
+      ResourceBundle bundle = ResourceBundle.getBundle("bundles.UIBundle",
+            new Locale("en"));
 
-		LoginDialog login = new LoginDialog(bundle);
-		if (login.getOwner() == null) {
-			login.initOwner(primaryStage);
-		}
+      LoginDialog login = new LoginDialog(bundle);
+      if (login.getOwner() == null) {
+         login.initOwner(primaryStage);
+      }
 
-		client = login.waitForAction();
-		if (client.getClientState() != ClientState.AUTHENTICATED) {
-			log.info("Exit from login prompt with client state: "
-					+ client.getClientState());
-			return;
-		}
-		Context.getInstance().setClient(client);
+      client = login.waitForAction();
+      if (client.getClientState() != ClientState.AUTHENTICATED) {
+         log.info("Exit from login prompt with client state: "
+               + client.getClientState());
+         return;
+      }
+      Context.getInstance().setClient(client);
 
-		FXMLLoader loader = new FXMLLoader(getClass().getResource(
-				"/fxml/MainScene.fxml"));
-		loader.setResources(bundle);
-		Parent root = loader.load();
-		root.getStylesheets().add("css/style.css");
-		Scene scene = new Scene(root);
+      FXMLLoader loader = new FXMLLoader(getClass().getResource(
+            "/fxml/MainScene.fxml"));
+      loader.setResources(bundle);
+      Parent root = loader.load();
+      root.getStylesheets().add("css/style.css");
+      Scene scene = new Scene(root);
 
-		primaryStage.setScene(scene);
-		primaryStage.setTitle(bundle.getString("appTitle") + " - "
-				+ client.getHostName() + ":" + client.getPort());
-		primaryStage.setMinWidth(400);
-		primaryStage.setMinHeight(300);
-		primaryStage.show();
+      primaryStage.setScene(scene);
+      primaryStage.setTitle(bundle.getString("appTitle") + " - "
+            + client.getHostName() + ":" + client.getPort());
+      primaryStage.setMinWidth(400);
+      primaryStage.setMinHeight(300);
+      primaryStage.show();
 
-	}
+   }
 
-	/**
-	 * Main method of the client application.
-	 * <p>
-	 * Application entry point.
-	 */
-	public static void main(String[] args) {
-		launch(args);
+   /**
+    * Main method of the client application.
+    * <p>
+    * Application entry point.
+    */
+   public static void main(String[] args) {
+      launch(args);
 
-	}
+   }
 
-	@Override
-	public void stop() {
-		client.disconnect();
-		log.info("Close app with client state: " + client.getClientState());
-	}
+   @Override
+   public void stop() {
+      client.disconnect();
+      log.info("Close app with client state: " + client.getClientState());
+   }
 
 }
