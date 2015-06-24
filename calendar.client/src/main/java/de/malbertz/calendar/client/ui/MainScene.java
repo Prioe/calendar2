@@ -36,6 +36,14 @@ import de.malbertz.calendar.client.ui.elements.MonthView;
 import de.malbertz.calendar.client.ui.elements.WeekView;
 import de.malbertz.calendar2.CalendarEntry;
 
+/**
+ * This class implements the MainController of the Application.
+ * <p>
+ * It contains a toggle group to with the views in the {@link ContentPane}.
+ * 
+ * @author Michael Albertz
+ *
+ */
 public class MainScene implements Initializable, Observer {
 
 	private static final Logger log = LogManager.getLogger(MainScene.class);
@@ -89,9 +97,12 @@ public class MainScene implements Initializable, Observer {
 		overviewToggleButton.setToggleGroup(group);
 		weekToggleButton.setToggleGroup(group);
 		monthToggleButton.setToggleGroup(group);
-		overviewToggleButton.setTooltip(new Tooltip(bundle.getString("agendaViewTT")));
-		weekToggleButton.setTooltip(new Tooltip(bundle.getString("weekViewTT")));
-		monthToggleButton.setTooltip(new Tooltip(bundle.getString("monthViewTT")));
+		overviewToggleButton.setTooltip(new Tooltip(bundle
+				.getString("agendaViewTT")));
+		weekToggleButton
+				.setTooltip(new Tooltip(bundle.getString("weekViewTT")));
+		monthToggleButton.setTooltip(new Tooltip(bundle
+				.getString("monthViewTT")));
 
 		group.selectedToggleProperty()
 				.addListener(
